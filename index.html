@@ -7,23 +7,28 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f1f5f9; color: #334155; margin: 0; padding: 15px; direction: rtl; }
-        .container { max-width: 750px; margin: 0 auto; }
+        .container { max-width: 800px; margin: 0 auto; }
         .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .hidden { display: none !important; }
-        h1, h2, h3 { color: #1e293b; margin-top: 0; }
+        h1, h2, h3, h4 { color: #1e293b; margin-top: 0; }
         .form-group { margin-bottom: 12px; }
         label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; }
         input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
         button { background-color: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem; width: 100%; }
         button:hover { background-color: #1d4ed8; }
+        .btn-sm { width: auto; padding: 4px 10px; font-size: 0.8rem; border-radius: 6px; }
+        .btn-danger { background-color: #ef4444; } .btn-danger:hover { background-color: #dc2626; }
+        .btn-warning { background-color: #f59e0b; color: white; } .btn-warning:hover { background-color: #d97706; }
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
         .badge-admin { background-color: #fef3c7; color: #92400e; }
         .badge-teacher { background-color: #e0e7ff; color: #3730a3; }
+        .badge-present { background-color: #dcfce7; color: #166534; }
+        .badge-absent { background-color: #fee2e2; color: #991b1b; }
         .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px; }
-        .logout-btn { background-color: #ef4444; width: auto; padding: 6px 14px; font-size: 0.85rem; }
-        .logout-btn:hover { background-color: #dc2626; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; }
+        .list-item { padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; }
+        .item-actions { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
@@ -32,13 +37,13 @@
 
     <!-- 1. شاشة تسجيل الدخول -->
     <div id="login-section" class="card">
-        <h1 style="text-align: center; font-size: 1.6rem;">🌱 منصة أمل - تسجيل الدخول</h1>
-        <p style="text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 20px;">أدخل اسم المستخدم وكلمة السر الخاصة بك</p>
+        <h1 style="text-align: center; font-size: 1.6rem;">🌱 منصة أمل التعليمية</h1>
+        <p style="text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 20px;">تسجيل الدخول للنظام</p>
         
         <form id="login-form">
             <div class="form-group">
                 <label>اسم المستخدم (Username):</label>
-                <input type="text" id="username" placeholder="مثال: admin أو اسم المدرس" required>
+                <input type="text" id="username" placeholder="أدخل اسم المستخدم..." required>
             </div>
             <div class="form-group">
                 <label>كلمة السر (Password):</label>
@@ -56,39 +61,40 @@
                 <h2 id="user-display-name" style="margin: 0; display: inline-block; font-size: 1.2rem;">أهلاً بك</h2>
                 <span id="role-badge" class="badge"></span>
             </div>
-            <button class="logout-btn" onclick="logout()">تسجيل خروج</button>
+            <button class="btn-sm btn-danger" onclick="logout()">تسجيل خروج</button>
         </div>
 
-        <!-- 👑 قسم خاص بالمالك فقط: إضافة المدرسين -->
+        <!-- 👑 لوحة المالك: إدارة المدرسين -->
         <div id="admin-only-section" class="hidden" style="background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-            <h3 style="color: #92400e; font-size: 1.1rem; margin-bottom: 10px;">👑 لوحة المالك: إضافة مدرس جديد</h3>
+            <h3 style="color: #92400e; font-size: 1.1rem; margin-bottom: 10px;">👑 إعدادات المالك: إدارة المدرسين</h3>
+            
             <form id="add-teacher-form">
-                <div class="grid-2">
+                <div class="grid-3">
                     <div class="form-group">
-                        <label>اسم المدرس (العرض):</label>
+                        <label>اسم المدرس:</label>
                         <input type="text" id="new-teacher-name" placeholder="مثال: أستاذ علي" required>
                     </div>
                     <div class="form-group">
                         <label>اسم المستخدم (اليوزر):</label>
                         <input type="text" id="new-teacher-user" placeholder="مثال: ali2026" required>
                     </div>
+                    <div class="form-group">
+                        <label>كلمة السر:</label>
+                        <input type="password" id="new-teacher-pass" placeholder="كلمة السر..." required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>كلمة السر:</label>
-                    <input type="password" id="new-teacher-pass" placeholder="أدخل كلمة سر للمدرس..." required>
-                </div>
-                <button type="submit" style="background-color: #d97706;">إضافة المدرس للقاعدة</button>
+                <button type="submit" style="background-color: #d97706;">إضافة مدرس جديد</button>
             </form>
 
-            <h4 style="color: #92400e; margin-top: 15px; margin-bottom: 8px;">قائمة المدرسين المسجلين:</h4>
+            <h4 style="color: #92400e; margin-top: 15px; margin-bottom: 8px;">قائمة المدرسين:</h4>
             <div id="teachers-list"></div>
         </div>
 
-        <!-- قسم إضافة الطلاب (متاح للمالك وللمدرسين) -->
+        <!-- قسم إضافة الطلاب -->
         <div class="card" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; margin-bottom: 20px;">
             <h3 style="font-size: 1.05rem;">تسجيل طالب جديد</h3>
             <form id="student-form">
-                <div class="grid-2">
+                <div class="grid-3">
                     <div class="form-group">
                         <label>اسم الطالب الثلاثي:</label>
                         <input type="text" id="student-name" required placeholder="اسم الطالب...">
@@ -97,13 +103,17 @@
                         <label>الصف / المرحلة:</label>
                         <input type="text" id="student-grade" required placeholder="مثال: السادس العلمي">
                     </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف:</label>
+                        <input type="tel" id="student-phone" placeholder="07xxxxxxxx" required>
+                    </div>
                 </div>
                 <button type="submit">إضافة الطالب</button>
             </form>
         </div>
 
-        <!-- قائمة الطلاب -->
-        <h3>قائمة الطلاب المسجلين</h3>
+        <!-- سجل الطلاب والحضور والغياب -->
+        <h3>سجل الطلاب والحضور اليومي</h3>
         <div id="students-list">
             <p style="color: #94a3b8; text-align: center;">لا يوجد طلاب مسجلين حالياً.</p>
         </div>
@@ -112,24 +122,33 @@
 </div>
 
 <script>
-    // حساب المالك الافتراضي
     const DEFAULT_ADMIN = {
-        "admin": { password: "123", name: "المالك (مؤمل)", role: "admin" }
+        "admin": { password: "123", name: "إدارة المعهد (المالك)", role: "admin" }
     };
 
-    // تحميل الحسابات من الذاكرة أو استرجاع الافتراضي
     function getUsers() {
         const saved = localStorage.getItem('amal_users');
-        if (saved) {
-            return JSON.parse(saved);
-        }
+        if (saved) return JSON.parse(saved);
         localStorage.setItem('amal_users', JSON.stringify(DEFAULT_ADMIN));
         return DEFAULT_ADMIN;
     }
 
+    function getStudents() {
+        const saved = localStorage.getItem('amal_students');
+        return saved ? JSON.parse(saved) : [];
+    }
+
+    function saveStudents(students) {
+        localStorage.setItem('amal_students', JSON.stringify(students));
+    }
+
     let currentUser = null;
 
-    // تسجيل الدخول
+    function getTodayDate() {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    }
+
     document.getElementById('login-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const u = document.getElementById('username').value.trim();
@@ -145,7 +164,6 @@
         }
     });
 
-    // عرض لوحة التحكم وتحديث الواجهة حسب الصلاحية
     function showDashboard() {
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('dashboard-section').classList.remove('hidden');
@@ -163,9 +181,10 @@
             roleBadge.className = "badge badge-teacher";
             document.getElementById('admin-only-section').classList.add('hidden');
         }
+
+        renderStudentsList();
     }
 
-    // إضافة مدرس جديد (خاص بالمالك)
     document.getElementById('add-teacher-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('new-teacher-name').value.trim();
@@ -174,7 +193,7 @@
 
         const users = getUsers();
         if (users[user]) {
-            alert('اسم المستخدم هذا موجود بالفعل، اختر اسماً آخر!');
+            alert('اسم المستخدم هذا موجود بالفعل!');
             return;
         }
 
@@ -186,7 +205,30 @@
         renderTeachersList();
     });
 
-    // عرض قائمة المدرسين لـ المالك
+    function editTeacher(userKey) {
+        const users = getUsers();
+        const t = users[userKey];
+        const newName = prompt("تعديل اسم المدرس:", t.name);
+        const newPass = prompt("تعديل كلمة السر:", t.password);
+
+        if (newName !== null && newPass !== null && newName.trim() !== "" && newPass.trim() !== "") {
+            users[userKey].name = newName.trim();
+            users[userKey].password = newPass.trim();
+            localStorage.setItem('amal_users', JSON.stringify(users));
+            alert("تم تعديل بيانات المدرس بنجاح!");
+            renderTeachersList();
+        }
+    }
+
+    function deleteTeacher(userKey) {
+        if (confirm("هل أنت متأكد من حذف هذا المدرس؟")) {
+            const users = getUsers();
+            delete users[userKey];
+            localStorage.setItem('amal_users', JSON.stringify(users));
+            renderTeachersList();
+        }
+    }
+
     function renderTeachersList() {
         const list = document.getElementById('teachers-list');
         const users = getUsers();
@@ -199,11 +241,16 @@
                 const item = document.createElement('div');
                 item.className = 'list-item';
                 item.innerHTML = `
-                    <div>
-                        <strong>${users[u].name}</strong><br>
-                        <small style="color: #64748b;">اليوزر: ${u} | الرمز: ${users[u].password}</small>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${users[u].name}</strong><br>
+                            <small style="color: #64748b;">اليوزر: ${u} | الرمز: ${users[u].password}</small>
+                        </div>
+                        <div>
+                            <button class="btn-sm btn-warning" onclick="editTeacher('${u}')">تعديل</button>
+                            <button class="btn-sm btn-danger" onclick="deleteTeacher('${u}')">حذف</button>
+                        </div>
                     </div>
-                    <span class="badge badge-teacher">مدرس</span>
                 `;
                 list.appendChild(item);
             }
@@ -214,7 +261,105 @@
         }
     }
 
-    // تسجيل الخروج
+    document.getElementById('student-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('student-name').value.trim();
+        const grade = document.getElementById('student-grade').value.trim();
+        const phone = document.getElementById('student-phone').value.trim();
+
+        const students = getStudents();
+        students.push({
+            id: Date.now(),
+            name: name,
+            grade: grade,
+            phone: phone,
+            attendance: {}
+        });
+
+        saveStudents(students);
+        alert(`تمت إضافة الطالب (${name}) بنجاح!`);
+        this.reset();
+        renderStudentsList();
+    });
+
+    function markAttendance(studentId, date, status) {
+        if (!date) {
+            alert('الرجاء اختيار التاريخ أولاً!');
+            return;
+        }
+        const students = getStudents();
+        const student = students.find(s => s.id === studentId);
+        if (student) {
+            if (!student.attendance) student.attendance = {};
+            student.attendance[date] = status;
+            saveStudents(students);
+            renderStudentsList();
+        }
+    }
+
+    function deleteStudent(studentId) {
+        if (confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
+            let students = getStudents();
+            students = students.filter(s => s.id !== studentId);
+            saveStudents(students);
+            renderStudentsList();
+        }
+    }
+
+    function renderStudentsList() {
+        const list = document.getElementById('students-list');
+        const students = getStudents();
+        list.innerHTML = '';
+
+        if (students.length === 0) {
+            list.innerHTML = '<p style="color: #94a3b8; text-align: center;">لا يوجد طلاب مسجلين حالياً.</p>';
+            return;
+        }
+
+        const today = getTodayDate();
+
+        students.forEach((s) => {
+            const activeDateInputId = `date-${s.id}`;
+            // إذا كان المستخدم لم يحدد تاريخاً في الحقل بعد، نعتبر تاريخ اليوم افتراضياً
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <strong style="font-size:1.05rem;">${s.name}</strong> - <span style="color: #2563eb;">${s.grade}</span><br>
+                        <small style="color: #64748b;">📱 الهاتف: ${s.phone}</small>
+                    </div>
+                </div>
+
+                <div class="item-actions">
+                    <label style="margin:0; font-size:0.8rem;">التاريخ:</label>
+                    <input type="date" id="${activeDateInputId}" value="${today}" style="width: auto; padding: 3px 6px; font-size: 0.8rem;">
+                    
+                    <button class="btn-sm" style="background:#16a34a;" onclick="markAttendance(${s.id}, document.getElementById('${activeDateInputId}').value, 'حاضر')">حاضر</button>
+                    <button class="btn-sm btn-danger" onclick="markAttendance(${s.id}, document.getElementById('${activeDateInputId}').value, 'غائب')">غائب</button>
+                    
+                    <span id="status-label-${s.id}" style="margin-right: auto; font-size: 0.85rem; font-weight: bold;">
+                        ${getAttendanceLabel(s, today)}
+                    </span>
+
+                    ${currentUser.role === 'admin' ? `<button class="btn-sm btn-warning" onclick="deleteStudent(${s.id})">حذف</button>` : ''}
+                </div>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+    function getAttendanceLabel(student, defaultDate) {
+        // دالة مساعدة لتحديث حالة الشارة بحسب التاريخ الافتراضي أو المختار
+        if (student.attendance && student.attendance[defaultDate]) {
+            const st = student.attendance[defaultDate];
+            if (st === 'حاضر') return '<span class="badge badge-present">حاضر اليوم</span>';
+            if (st === 'غائب') return '<span class="badge badge-absent">غائب اليوم</span>';
+        }
+        return '<span class="badge" style="background:#e2e8f0; color:#475569;">لم يُسجل اليوم</span>';
+    }
+
     function logout() {
         currentUser = null;
         document.getElementById('username').value = '';
@@ -226,3 +371,5 @@
 
 </body>
 </html>
+
+

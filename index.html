@@ -130,7 +130,13 @@
 
     function getStudents() {
         const saved = localStorage.getItem('amal_students');
-        return saved ? JSON.parse(saved) : [];
+        const allStudents = saved ? JSON.parse(saved) : [];
+        
+        if (currentUser.role === 'admin') {
+            return allStudents;
+        } else {
+            return allStudents.filter(s => s.addedBy === currentUser.name);
+        }
     }
 
     function saveStudents(students) {
@@ -272,32 +278,25 @@
             return;
         }
 
-        const students = getStudents();
+        const saved = localStorage.getItem('amal_students');
+        const students = saved ? JSON.parse(saved) : [];
+
         students.push({
             id: Date.now(),
             name: name,
             grade: grade,
             phone: phone,
+            addedBy: currentUser.name,
             attendance: {}
         });
 
-        saveStudents(students);
+        localStorage.setItem('amal_students', JSON.stringify(students));
         alert(`تمت إضافة الطالب (${name}) بنجاح!`);
         
         document.getElementById('student-name').value = '';
         document.getElementById('student-grade').value = '';
         document.getElementById('student-phone').value = '';
         renderStudentsList();
-    }
-
-    function markAttendance(studentId, dateInputId) {
-        const dateVal = document.getElementById(dateInputId).value;
-        if (!dateVal) {
-            alert('الرجاء اختيار التاريخ أولاً!');
-            return;
-        }
-        
-        // سنقرر الحالة بناءً على الزر الذي تم النقر عليه أو نأخذ القيمة الممررة
     }
 
     function setStudentStatus(studentId, dateInputId, status) {
@@ -307,21 +306,24 @@
             return;
         }
 
-        const students = getStudents();
-        const student = students.find(s => s.id === studentId);
+        const saved = localStorage.getItem('amal_students');
+        const allStudents = saved ? JSON.parse(saved) : [];
+        const student = allStudents.find(s => s.id === studentId);
+        
         if (student) {
             if (!student.attendance) student.attendance = {};
             student.attendance[dateVal] = status;
-            saveStudents(students);
+            localStorage.setItem('amal_students', JSON.stringify(allStudents));
             renderStudentsList();
         }
     }
 
     function deleteStudent(studentId) {
         if (confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
-            let students = getStudents();
-            students = students.filter(s => s.id !== studentId);
-            saveStudents(students);
+            const saved = localStorage.getItem('amal_students');
+            let allStudents = saved ? JSON.parse(saved) : [];
+            allStudents = allStudents.filter(s => s.id !== studentId);
+            localStorage.setItem('amal_students', JSON.stringify(allStudents));
             renderStudentsList();
         }
     }
@@ -343,8 +345,6 @@
             const item = document.createElement('div');
             item.className = 'list-item';
             
-            // استرجاع التاريخ المحدد حالياً في حقل الإدخال إذا كان موجوداً، وإلا تاريخ اليوم
-            // لتجنب إعادة ضبط التاريخ عند تحديث القائمة
             let selectedDate = today;
             const existingInput = document.getElementById(activeDateInputId);
             if (existingInput && existingInput.value) {
@@ -355,7 +355,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                     <div>
                         <strong style="font-size:1.05rem;">${s.name}</strong> - <span style="color: #2563eb;">${s.grade}</span><br>
-                        <small style="color: #64748b;">📱 الهاتف: ${s.phone}</small>
+                        <small style="color: #64748b;">📱 الهاتف: ${s.phone} | أُضيف بواسطة: ${s.addedBy}</small>
                     </div>
                 </div>
 
@@ -370,12 +370,11 @@
                         ${getAttendanceLabel(s, selectedDate)}
                     </span>
 
-                    ${currentUser.role === 'admin' ? `<button type="button" class="btn-sm btn-warning" onclick="deleteStudent(${s.id})">حذف</button>` : ''}
+                    <button type="button" class="btn-sm btn-warning" onclick="deleteStudent(${s.id})">حذف</button>
                 </div>
             `;
             list.appendChild(item);
 
-            // إضافة مستمع لتحديث شارة الحالة مباشرة عند تغير التاريخ يدوياً من قِبل المستخدم
             setTimeout(() => {
                 const dateInputElem = document.getElementById(activeDateInputId);
                 if (dateInputElem) {

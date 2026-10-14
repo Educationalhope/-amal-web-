@@ -29,15 +29,10 @@
         .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px; }
         .list-item { padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; }
         .item-actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-
-        /* تنسيق خاص لطباعة الوصل */
-        @media print {
-            body * { visibility: hidden; }
-            #print-receipt-area, #print-receipt-area * { visibility: visible; }
-            #print-receipt-area { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; background: white; }
-        }
+        .stats-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; }
     </style>
 </head>
 <body>
@@ -73,11 +68,27 @@
             <button type="button" class="btn-sm btn-danger" onclick="logout()">تسجيل خروج</button>
         </div>
 
+        <!-- 📊 إحصائيات مالية سريعة -->
+        <div class="stats-box">
+            <div class="stat-card">
+                <span style="font-size: 0.8rem; color: #64748b;">إجمالي القسائط</span>
+                <h4 id="stat-total" style="margin: 5px 0 0; color: #2563eb;">0 د.ع</h4>
+            </div>
+            <div class="stat-card">
+                <span style="font-size: 0.8rem; color: #64748b;">المبالغ الواصلة</span>
+                <h4 id="stat-paid" style="margin: 5px 0 0; color: #16a34a;">0 د.ع</h4>
+            </div>
+            <div class="stat-card">
+                <span style="font-size: 0.8rem; color: #64748b;">المتبقي ذمم</span>
+                <h4 id="stat-remaining" style="margin: 5px 0 0; color: #dc2626;">0 د.ع</h4>
+            </div>
+        </div>
+
         <!-- 👑 لوحة المالك: إدارة المدرسين -->
         <div id="admin-only-section" class="hidden" style="background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
             <h3 style="color: #92400e; font-size: 1.1rem; margin-bottom: 10px;">👑 إعدادات المالك: إدارة المدرسين</h3>
             
-            <div class="grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div class="grid-3">
                 <div class="form-group">
                     <label>اسم المدرس:</label>
                     <input type="text" id="new-teacher-name" placeholder="مثال: أستاذ علي">
@@ -115,41 +126,22 @@
                 </div>
                 <div class="form-group">
                     <label>إجمالي القسط (د.ع):</label>
-                    <input type="number" id="student-fee" placeholder="مثال: 150000">
+                    <input type="number" id="student-fee" placeholder="150000">
                 </div>
             </div>
             <button type="button" onclick="addNewStudent()">حفظ وإضافة الطالب</button>
         </div>
 
-        <!-- سجل الطلاب والحضور والأقساط -->
-        <h3>سجل الطلاب والمتابعة اليومية والأقساط</h3>
+        <!-- شريط البحث السريع وسجل الطلاب -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="margin: 0;">سجل الطلاب والمتابعة اليومية</h3>
+            <input type="text" id="search-box" placeholder="🔍 ابحث عن اسم طالب..." onkeyup="renderStudentsList()" style="max-width: 250px; padding: 6px 12px; font-size: 0.85rem;">
+        </div>
         <div id="students-list">
             <p style="color: #94a3b8; text-align: center;">لا يوجد طلاب مسجلين حالياً.</p>
         </div>
     </div>
 
-</div>
-
-<!-- نافذة مخفية لطباعة الوصل المالي -->
-<div id="print-receipt-area" class="hidden">
-    <div style="text-align: center; border-bottom: 2px dashed #333; padding-bottom: 10px; margin-bottom: 15px;">
-        <h2>🌱 منصة أمل التعليمية</h2>
-        <p>وصل قبض رسمـي</p>
-    </div>
-    <div style="font-size: 1.1rem; line-height: 1.8;">
-        <p><strong>رقم الوصل:</strong> <span id="r-id"></span></p>
-        <p><strong>التاريخ:</strong> <span id="r-date"></span></p>
-        <p><strong>اسم الطالب:</strong> <span id="r-name"></span></p>
-        <p><strong>المرحلة الدراسية:</strong> <span id="r-grade"></span></p>
-        <hr style="border: 1px solid #ddd;">
-        <p><strong>المبلغ الكلي للقسط:</strong> <span id="r-total"></span> د.ع</p>
-        <p><strong>المبلغ المدفوع حالياً:</strong> <span id="r-paid"></span> د.ع</p>
-        <p><strong>المتبقي ذمته:</strong> <span id="r-remaining"></span> د.ع</p>
-    </div>
-    <div style="margin-top: 40px; display: flex; justify-content: space-between; text-align: center;">
-        <p>توقيع الإدارة<br>...................</p>
-        <p>المحاسب<br>...................</p>
-    </div>
 </div>
 
 <script>
@@ -159,6 +151,11 @@
 
     let currentUsername = null;
     let currentUser = null;
+
+    // دالة لتنسيق الأرقام بوضع فاصلة الآلاف (مثال: 1,000)
+    function formatMoney(amount) {
+        return Number(amount || 0).toLocaleString('en-US');
+    }
 
     function getUsers() {
         const saved = localStorage.getItem('amal_users');
@@ -176,10 +173,6 @@
         } else {
             return allStudents.filter(s => s.addedByUsername === currentUsername);
         }
-    }
-
-    function saveStudents(students) {
-        localStorage.setItem('amal_students', JSON.stringify(students));
     }
 
     function getTodayDate() {
@@ -359,32 +352,94 @@
         }
     }
 
+    // زر تعديل بيانات الطالب الأساسية
+    function editStudent(studentId) {
+        const saved = localStorage.getItem('amal_students');
+        let allStudents = saved ? JSON.parse(saved) : [];
+        const s = allStudents.find(st => st.id === studentId);
+
+        if (s) {
+            const newName = prompt("تعديل اسم الطالب:", s.name);
+            const newGrade = prompt("تعديل الصف الدراسي:", s.grade);
+            const newPhone = prompt("تعديل رقم الهاتف:", s.phone);
+            const newFee = prompt("تعديل إجمالي القسط الكلي:", s.totalFee);
+
+            if (newName !== null && newGrade !== null && newPhone !== null && newFee !== null) {
+                s.name = newName.trim();
+                s.grade = newGrade.trim();
+                s.phone = newPhone.trim();
+                s.totalFee = parseFloat(newFee) || 0;
+
+                localStorage.setItem('amal_students', JSON.stringify(allStudents));
+                alert("تم تعديل بيانات الطالب بنجاح!");
+                renderStudentsList();
+            }
+        }
+    }
+
     function printReceipt(studentId) {
         const saved = localStorage.getItem('amal_students');
         const allStudents = saved ? JSON.parse(saved) : [];
         const s = allStudents.find(st => st.id === studentId);
 
         if (s) {
-            document.getElementById('r-id').textContent = 'REC-' + s.id.toString().slice(-6);
-            document.getElementById('r-date').textContent = new Date().toLocaleDateString('ar-IQ');
-            document.getElementById('r-name').textContent = s.name;
-            document.getElementById('r-grade').textContent = s.grade;
-            document.getElementById('r-total').textContent = s.totalFee || 0;
-            document.getElementById('r-paid').textContent = s.paidFee || 0;
-            document.getElementById('r-remaining').textContent = (s.totalFee || 0) - (s.paidFee || 0);
+            const receiptId = 'REC-' + s.id.toString().slice(-6);
+            const todayDate = new Date().toLocaleDateString('ar-IQ');
+            const total = s.totalFee || 0;
+            const paid = s.paidFee || 0;
+            const remaining = total - paid;
 
-            window.print();
+            const printWindow = window.open('', '', 'width=600,height=600');
+            printWindow.document.write(`
+                <html dir="rtl" lang="ar">
+                <head>
+                    <title>وصل قبض - ${s.name}</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; direction: rtl; text-align: right; }
+                        .receipt-box { border: 2px solid #333; padding: 20px; border-radius: 10px; }
+                        .header { text-align: center; border-bottom: 2px dashed #333; padding-bottom: 10px; margin-bottom: 15px; }
+                        .line { margin: 10px 0; font-size: 1.1rem; }
+                        .footer { margin-top: 40px; display: flex; justify-content: space-between; text-align: center; }
+                    </style>
+                </head>
+                <body>
+                    <div class="receipt-box">
+                        <div class="header">
+                            <h2>🌱 منصة أمل التعليمية</h2>
+                            <p>وصل قبض مالـي رسمي</p>
+                        </div>
+                        <div class="line"><strong>رقم الوصل:</strong> ${receiptId}</div>
+                        <div class="line"><strong>التاريخ:</strong> ${todayDate}</div>
+                        <div class="line"><strong>اسم الطالب:</strong> ${s.name}</div>
+                        <div class="line"><strong>الصف / المرحلة:</strong> ${s.grade}</div>
+                        <hr>
+                        <div class="line"><strong>المبلغ الكلي للقسط:</strong> ${formatMoney(total)} د.ع</div>
+                        <div class="line"><strong>المبلغ المدفوع حالياً:</strong> ${formatMoney(paid)} د.ع</div>
+                        <div class="line"><strong>المتبقي ذمته:</strong> ${formatMoney(remaining)} د.ع</div>
+                        <div class="footer">
+                            <div>توقيع الإدارة<br><br>...................</div>
+                            <div>توقيع المحاسب<br><br>...................</div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 300);
         }
     }
 
     function sendWhatsApp(phone, studentName, status, date, remainingFee) {
-        // تنظيف رقم الهاتف وتنسيقه ليدعم العراق (مثال: يبدأ بـ 964)
         let cleanPhone = phone.replace(/\D/g, '');
         if (cleanPhone.startsWith('0')) {
             cleanPhone = '964' + cleanPhone.substring(1);
         }
 
-        let message = `إدارة منصة أمل التعليمية\nولي الأمر المحترم، نود إعلامكم بأن ابنكم/تكم (${studentName}) قد سجل بحالة الحضور ليوم ${date} كـ: *${status}*.\nالمبلغ المتبقي من القسط: ${remainingFee} د.ع.\nمع الشكر والتقدير.`;
+        let message = `إدارة منصة أمل التعليمية\nولي الأمر المحترم، نود إعلامكم بأن ابنكم/تكم (${studentName}) سجل بحالة الحضور ليوم ${date} كـ: *${status}*.\nالمبلغ المتبقي من القسط: ${formatMoney(remainingFee)} د.ع.\nمع الشكر والتقدير.`;
         
         const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
@@ -421,8 +476,26 @@
 
     function renderStudentsList() {
         const list = document.getElementById('students-list');
-        const students = getStudents();
+        let students = getStudents();
+        
+        // تطبيق البحث السريع
+        const searchQuery = document.getElementById('search-box').value.trim().toLowerCase();
+        if (searchQuery) {
+            students = students.filter(s => s.name.toLowerCase().includes(searchQuery) || s.phone.includes(searchQuery));
+        }
+
         list.innerHTML = '';
+
+        // حساب وإظهار إحصائيات المعهد المالية
+        let totalSum = 0;
+        let paidSum = 0;
+        getStudents().forEach(s => {
+            totalSum += (s.totalFee || 0);
+            paidSum += (s.paidFee || 0);
+        });
+        document.getElementById('stat-total').textContent = formatMoney(totalSum) + ' د.ع';
+        document.getElementById('stat-paid').textContent = formatMoney(paidSum) + ' د.ع';
+        document.getElementById('stat-remaining').textContent = formatMoney(totalSum - paidSum) + ' د.ع';
 
         if (students.length === 0) {
             list.innerHTML = '<p style="color: #94a3b8; text-align: center;">لا يوجد طلاب مسجلين حالياً.</p>';
@@ -455,9 +528,9 @@
                         <small style="color: #64748b;">📱 الهاتف: ${s.phone} ${currentUser.role === 'admin' ? `| أُضيف بواسطة: ${s.addedByName}` : ''}</small>
                     </div>
                     <div style="text-align: left; font-size: 0.85rem; background: #f1f5f9; padding: 6px; border-radius: 6px;">
-                        <span>القسط الكلي: <strong>${total}</strong> د.ع</span><br>
-                        <span>الواصل: <strong style="color: #16a34a;">${paid}</strong> د.ع</span><br>
-                        <span>المتبقي: <strong style="color: #dc2626;">${remaining}</strong> د.ع</span>
+                        <span>القسط الكلي: <strong>${formatMoney(total)}</strong> د.ع</span><br>
+                        <span>الواصل: <strong style="color: #16a34a;">${formatMoney(paid)}</strong> د.ع</span><br>
+                        <span>المتبقي: <strong style="color: #dc2626;">${formatMoney(remaining)}</strong> د.ع</span>
                     </div>
                 </div>
 
@@ -477,6 +550,7 @@
                     <button type="button" class="btn-sm btn-warning" onclick="updateFee(${s.id})">💰 تسديد قسط</button>
                     <button type="button" class="btn-sm" style="background:#0284c7;" onclick="printReceipt(${s.id})">🖨️ طباعة وصل</button>
                     <button type="button" class="btn-sm btn-whatsapp" onclick="sendWhatsApp('${s.phone}', '${s.name}', '${currentStatus}', '${selectedDate}', ${remaining})">💬 إرسال واتساب</button>
+                    <button type="button" class="btn-sm" style="background:#64748b;" onclick="editStudent(${s.id})">✏️ تعديل</button>
                     <button type="button" class="btn-sm btn-danger" style="margin-right: auto;" onclick="deleteStudent(${s.id})">حذف</button>
                 </div>
             `;

@@ -1,593 +1,588 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة أمل التعليمية - إدارة المعاهد</title>
-    <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f1f5f9; color: #334155; margin: 0; padding: 15px; direction: rtl; }
-        .container { max-width: 850px; margin: 0 auto; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .hidden { display: none !important; }
-        h1, h2, h3, h4 { color: #1e293b; margin-top: 0; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
-        button { background-color: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem; width: 100%; }
-        button:hover { background-color: #1d4ed8; }
-        .btn-sm { width: auto; padding: 5px 12px; font-size: 0.8rem; border-radius: 6px; }
-        .btn-danger { background-color: #ef4444; } .btn-danger:hover { background-color: #dc2626; }
-        .btn-warning { background-color: #f59e0b; color: white; } .btn-warning:hover { background-color: #d97706; }
-        .btn-success { background-color: #16a34a; color: white; } .btn-success:hover { background-color: #15803d; }
-        .btn-whatsapp { background-color: #25d366; color: white; } .btn-whatsapp:hover { background-color: #1ebe5d; }
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
-        .badge-admin { background-color: #fef3c7; color: #92400e; }
-        .badge-teacher { background-color: #e0e7ff; color: #3730a3; }
-        .badge-present { background-color: #dcfce7; color: #166534; }
-        .badge-absent { background-color: #fee2e2; color: #991b1b; }
-        .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px; }
-        .list-item { padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; }
-        .item-actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-        .stats-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محاضرتي الذكية - LecNote AI | مؤمل نزار</title>
+
+  <!-- Bootstrap & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-red: #ef4444;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background-color: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #334155;
+    }
+
+    .main-card {
+      background: var(--card-bg);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      padding: 25px;
+      margin-top: 25px;
+    }
+
+    .btn-primary-custom {
+      background-color: var(--primary-color);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger-custom {
+      background-color: var(--accent-red);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 10px;
+    }
+
+    .btn-outline-custom {
+      border: 2px dashed #475569;
+      color: var(--text-muted);
+      background: #0f172a;
+      padding: 15px;
+      border-radius: 10px;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+      border-color: var(--primary-color);
+      color: white;
+      background: #1e293b;
+    }
+
+    .status-badge {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: #334155;
+      color: var(--text-muted);
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    .lecture-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: 0.2s;
+    }
+
+    .lecture-card:hover {
+      border-color: var(--primary-color);
+    }
+
+    .form-control {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      color: var(--text-color);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .form-control:focus {
+      background-color: #0f172a;
+      color: var(--text-color);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+    }
+
+    .nav-tabs .nav-link {
+      color: var(--text-muted);
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: #38bdf8;
+      background: transparent;
+      border-bottom: 2px solid #38bdf8;
+    }
+
+    audio {
+      width: 100%;
+      height: 38px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: auto;
+      background-color: #1e293b;
+      border-top: 1px solid #334155;
+      padding: 15px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
+  <!-- شريط الملاحة -->
+  <nav class="navbar navbar-dark">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <i class="fa-solid fa-graduation-cap text-primary fs-3"></i>
+        <span class="fw-bold fs-4">محاضرتي الذكية - LecNote AI</span>
+      </a>
+      <a href="https://t.me/moamel_nazar" target="_blank" class="badge bg-primary px-3 py-2 rounded-pill text-decoration-none">
+        <i class="fa-brands fa-telegram me-1"></i> فكرة وتنفيذ الطالب: مؤمل نزار
+      </a>
+    </div>
+  </nav>
 
-    <!-- 1. شاشة تسجيل الدخول -->
-    <div id="login-section" class="card">
-        <h1 style="text-align: center; font-size: 1.6rem;">🌱 منصة أمل التعليمية</h1>
-        <p style="text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 20px;">تسجيل الدخول للنظام</p>
-        
-        <form id="login-form">
-            <div class="form-group">
-                <label>اسم المستخدم (Username):</label>
-                <input type="text" id="username" placeholder="أدخل اسم المستخدم..." required>
-            </div>
-            <div class="form-group">
-                <label>كلمة السر (Password):</label>
-                <input type="password" id="password" placeholder="أدخل كلمة السر..." required>
-            </div>
-            <button type="submit">تسجيل الدخول</button>
-        </form>
-        <p id="login-error" style="color: #ef4444; text-align: center; font-size: 0.85rem; margin-top: 10px;" class="hidden">بيانات الدخول غير صحيحة!</p>
+  <div class="container mb-5" style="max-width: 720px;">
+    <!-- كارت التسجيل والرفع -->
+    <div class="main-card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold m-0"><i class="fa-solid fa-layer-group text-primary me-2"></i> إضافة محاضرة جديدة</h3>
+        <span class="badge bg-success px-3 py-2"><i class="fa-solid fa-bolt me-1"></i> التلخيص الذكي مفعل تلقائياً</span>
+      </div>
+
+      <!-- تبويبات الخيارات -->
+      <ul class="nav nav-tabs mb-4" id="modeTabs">
+        <li class="nav-item">
+          <button class="nav-link active" id="record-tab" type="button" onclick="switchTab('record')">
+            <i class="fa-solid fa-microphone me-1"></i> تسجيل مباشر
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="upload-tab" type="button" onclick="switchTab('upload')">
+            <i class="fa-solid fa-file-audio me-1"></i> رفع ملف صوتي
+          </button>
+        </li>
+      </ul>
+
+      <div class="mb-3">
+        <label class="form-label text-secondary">البريد الإلكتروني للطالب</label>
+        <input type="email" id="email" class="form-control" placeholder="example@gmail.com">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label text-secondary">اسم المادة / عنوان المحاضرة</label>
+        <input type="text" id="lectureTitle" class="form-control" placeholder="مثال: اللغة العربية - قواعد وشعر">
+      </div>
+
+      <!-- قسم التسجيل المباشر -->
+      <div id="record-panel">
+        <div class="d-flex gap-2">
+          <button id="startBtn" type="button" class="btn btn-primary-custom flex-grow-1">
+            <i class="fa-solid fa-play me-1"></i> بدء التسجيل
+          </button>
+          <button id="stopBtn" type="button" class="btn btn-danger-custom flex-grow-1" disabled>
+            <i class="fa-solid fa-square me-1"></i> إيقاف وتلخيص
+          </button>
+        </div>
+      </div>
+
+      <!-- قسم رفع ملف صوتي -->
+      <div id="upload-panel" style="display: none;">
+        <input type="file" id="audioFileInput" accept="audio/*" class="d-none">
+        <button type="button" id="selectFileBtn" class="btn-outline-custom text-center">
+          <i class="fa-solid fa-cloud-arrow-up fs-2 mb-2 d-block text-primary"></i>
+          <span id="fileLabel">اضغط هنا لاختيار ملف صوتي (MP3, M4A, WAV...)</span>
+        </button>
+        <button id="processUploadedBtn" type="button" class="btn btn-primary-custom w-100 mt-3" disabled>
+          <i class="fa-solid fa-wand-magic-sparkles me-1"></i> رفع وتلخيص الصوت الشامل
+        </button>
+      </div>
+
+      <div class="text-center">
+        <span id="status" class="status-badge"><i class="fa-solid fa-circle-check text-success me-1"></i> الذكاء الاصطناعي مجهز ومستعد للتلخيص المباشر...</span>
+      </div>
     </div>
 
-    <!-- 2. لوحة التحكم الرئيسية -->
-    <div id="dashboard-section" class="card hidden">
-        <div class="header-bar">
-            <div>
-                <h2 id="user-display-name" style="margin: 0; display: inline-block; font-size: 1.2rem;">أهلاً بك</h2>
-                <span id="role-badge" class="badge"></span>
-            </div>
-            <button type="button" class="btn-sm btn-danger" onclick="logout()">تسجيل خروج</button>
-        </div>
+    <!-- كارت الأرشيف مع شريط البحث -->
+    <div class="main-card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold m-0"><i class="fa-solid fa-box-archive text-warning me-2"></i> أرشيف المحاضرات المحفوظة</h4>
+        <button id="refreshBtn" type="button" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-rotate-right me-1"></i> تحديث</button>
+      </div>
 
-        <!-- 📊 إحصائيات مالية سريعة -->
-        <div class="stats-box">
-            <div class="stat-card">
-                <span style="font-size: 0.8rem; color: #64748b;">إجمالي القسائط</span>
-                <h4 id="stat-total" style="margin: 5px 0 0; color: #2563eb;">0 د.ع</h4>
-            </div>
-            <div class="stat-card">
-                <span style="font-size: 0.8rem; color: #64748b;">المبالغ الواصلة</span>
-                <h4 id="stat-paid" style="margin: 5px 0 0; color: #16a34a;">0 د.ع</h4>
-            </div>
-            <div class="stat-card">
-                <span style="font-size: 0.8rem; color: #64748b;">المتبقي ذمم</span>
-                <h4 id="stat-remaining" style="margin: 5px 0 0; color: #dc2626;">0 د.ع</h4>
-            </div>
-        </div>
+      <div class="mb-3">
+        <input type="text" id="searchInput" onkeyup="filterLectures()" class="form-control" placeholder="🔍 بحث عن محاضرة أو مادة محفوظة...">
+      </div>
 
-        <!-- 👑 لوحة المالك: إدارة المدرسين -->
-        <div id="admin-only-section" class="hidden" style="background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-            <h3 style="color: #92400e; font-size: 1.1rem; margin-bottom: 10px;">👑 إعدادات المالك: إدارة المدرسين</h3>
-            
-            <div class="grid-3">
-                <div class="form-group">
-                    <label>اسم المدرس:</label>
-                    <input type="text" id="new-teacher-name" placeholder="مثال: أستاذ علي">
-                </div>
-                <div class="form-group">
-                    <label>اسم المستخدم:</label>
-                    <input type="text" id="new-teacher-user" placeholder="ali2026">
-                </div>
-                <div class="form-group">
-                    <label>كلمة السر:</label>
-                    <input type="password" id="new-teacher-pass" placeholder="كلمة السر...">
-                </div>
-            </div>
-            <button type="button" onclick="addNewTeacher()" style="background-color: #d97706; margin-top: 5px;">إضافة مدرس جديد</button>
-
-            <h4 style="color: #92400e; margin-top: 15px; margin-bottom: 8px;">قائمة المدرسين:</h4>
-            <div id="teachers-list"></div>
-        </div>
-
-        <!-- قسم إضافة الطلاب والأقساط -->
-        <div class="card" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; margin-bottom: 20px;">
-            <h3 style="font-size: 1.05rem;">تسجيل طالب جديد مع الأقساط</h3>
-            <div class="grid-4">
-                <div class="form-group">
-                    <label>اسم الطالب الثلاثي:</label>
-                    <input type="text" id="student-name" placeholder="اسم الطالب...">
-                </div>
-                <div class="form-group">
-                    <label>الصف / المرحلة:</label>
-                    <input type="text" id="student-grade" placeholder="السادس العلمي">
-                </div>
-                <div class="form-group">
-                    <label>رقم الهاتف:</label>
-                    <input type="tel" id="student-phone" placeholder="07xxxxxxxx">
-                </div>
-                <div class="form-group">
-                    <label>إجمالي القسط (د.ع):</label>
-                    <input type="number" id="student-fee" placeholder="150000">
-                </div>
-            </div>
-            <button type="button" onclick="addNewStudent()">حفظ وإضافة الطالب</button>
-        </div>
-
-        <!-- شريط البحث السريع وسجل الطلاب -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0;">سجل الطلاب والمتابعة اليومية</h3>
-            <input type="text" id="search-box" placeholder="🔍 ابحث عن اسم طالب..." onkeyup="renderStudentsList()" style="max-width: 250px; padding: 6px 12px; font-size: 0.85rem;">
-        </div>
-        <div id="students-list">
-            <p style="color: #94a3b8; text-align: center;">لا يوجد طلاب مسجلين حالياً.</p>
-        </div>
+      <div id="lecturesList">
+        <p class="text-muted text-center py-3">لا توجد محاضرات محفوظة حتى الآن.</p>
+      </div>
     </div>
+  </div>
 
-</div>
+  <!-- التذييل -->
+  <footer>
+    <div class="container">
+      <p class="m-0">جميع الحقوق محفوظة © 2026 | <strong>فكرة وتنفيذ الطالب مؤمل نزار</strong> | Telegram: <a href="https://t.me/moamel_nazar" target="_blank">@moamel_nazar</a></p>
+    </div>
+  </footer>
 
-<script>
-    const DEFAULT_ADMIN = {
-        "admin": { password: "123", name: "المالك", role: "admin" }
+  <script>
+    function getEmbeddedKey() {
+      const _k1 = "AQ.Ab8RN6Jj8JxU";
+      const _k2 = "vwS2bnCTVgs1e7W";
+      const _k3 = "pmfwCCCOlzU5Nqob92lNxEQ";
+      return _k1 + _k2 + _k3;
+    }
+
+    let mediaRecorder;
+    let audioChunks = [];
+    let selectedAudioFile = null;
+    let recordingStartTime = 0;
+
+    function switchTab(tabName) {
+      const recordTab = document.getElementById('record-tab');
+      const uploadTab = document.getElementById('upload-tab');
+      const recordPanel = document.getElementById('record-panel');
+      const uploadPanel = document.getElementById('upload-panel');
+
+      if (tabName === 'record') {
+        recordTab.classList.add('active');
+        uploadTab.classList.remove('active');
+        recordPanel.style.display = 'block';
+        uploadPanel.style.display = 'none';
+      } else {
+        uploadTab.classList.add('active');
+        recordTab.classList.remove('active');
+        uploadPanel.style.display = 'block';
+        recordPanel.style.display = 'none';
+      }
+    }
+
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
+    const audioFileInput = document.getElementById('audioFileInput');
+    const selectFileBtn = document.getElementById('selectFileBtn');
+    const fileLabel = document.getElementById('fileLabel');
+    const processUploadedBtn = document.getElementById('processUploadedBtn');
+
+    selectFileBtn.onclick = () => audioFileInput.click();
+
+    audioFileInput.onchange = (e) => {
+      if (e.target.files && e.target.files[0]) {
+        selectedAudioFile = e.target.files[0];
+        fileLabel.innerHTML = '<strong class="text-success"><i class="fa-solid fa-file-audio me-1"></i> تم اختيار: ' + selectedAudioFile.name + '</strong>';
+        processUploadedBtn.disabled = false;
+      }
     };
 
-    let currentUsername = null;
-    let currentUser = null;
+    processUploadedBtn.onclick = async function() {
+      const email = document.getElementById('email').value.trim();
+      const title = document.getElementById('lectureTitle').value.trim();
+      const apiKey = getEmbeddedKey();
 
-    // دالة لتنسيق الأرقام بوضع فاصلة الآلاف (مثال: 1,000)
-    function formatMoney(amount) {
-        return Number(amount || 0).toLocaleString('en-US');
-    }
+      if (!email || !title) {
+        alert("يرجى إدخال البريد الإلكتروني وعنوان المحاضرة أولاً!");
+        return;
+      }
 
-    function getUsers() {
-        const saved = localStorage.getItem('amal_users');
-        if (saved) return JSON.parse(saved);
-        localStorage.setItem('amal_users', JSON.stringify(DEFAULT_ADMIN));
-        return DEFAULT_ADMIN;
-    }
+      if (!selectedAudioFile) {
+        alert("يرجى اختيار ملف صوتي أولاً!");
+        return;
+      }
 
-    function getStudents() {
-        const saved = localStorage.getItem('amal_students');
-        const allStudents = saved ? JSON.parse(saved) : [];
-        
-        if (currentUser.role === 'admin') {
-            return allStudents;
-        } else {
-            return allStudents.filter(s => s.addedByUsername === currentUsername);
-        }
-    }
+      const audioUrl = URL.createObjectURL(selectedAudioFile);
 
-    function getTodayDate() {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
-    }
+      status.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-primary me-1"></i> جاري استماع وتلخيص كافة التفاصيل بالذكاء الاصطناعي...';
+      try {
+        const summaryText = await summarizeAudioWithGemini(selectedAudioFile, apiKey, title);
+        status.innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i> تم تحليل وتلخيص الصوت الفعلي كاملاً!';
+        addLectureToUI(title + " (ملف مرفوع)", summaryText, audioUrl);
+      } catch (err) {
+        status.innerHTML = '<i class="fa-solid fa-circle-exclamation text-danger me-1"></i> خطأ في معالجة الصوت';
+        alert("حدث خطأ أثناء الاتصال بمحرك الذكاء الاصطناعي: " + err.message);
+        return;
+      }
 
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const u = document.getElementById('username').value.trim();
-        const p = document.getElementById('password').value.trim();
-        const users = getUsers();
+      document.getElementById('lectureTitle').value = "";
+      selectedAudioFile = null;
+      fileLabel.innerText = "اضغط هنا لاختيار ملف صوتي (MP3, M4A, WAV...)";
+      processUploadedBtn.disabled = true;
+    };
 
-        if (users[u] && users[u].password === p) {
-            currentUsername = u;
-            currentUser = users[u];
-            document.getElementById('login-error').classList.add('hidden');
-            showDashboard();
-        } else {
-            document.getElementById('login-error').classList.remove('hidden');
-        }
-    });
+    startBtn.onclick = function(e) {
+      if (e) e.preventDefault();
 
-    function showDashboard() {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('dashboard-section').classList.remove('hidden');
+      const email = document.getElementById('email').value.trim();
+      const title = document.getElementById('lectureTitle').value.trim();
 
-        document.getElementById('user-display-name').textContent = currentUser.name;
-        const roleBadge = document.getElementById('role-badge');
+      if (!email || !title) {
+        alert("يرجى إدخال البريد الإلكتروني وعنوان المحاضرة أولاً!");
+        return;
+      }
 
-        if (currentUser.role === 'admin') {
-            roleBadge.textContent = "المالك";
-            roleBadge.className = "badge badge-admin";
-            document.getElementById('admin-only-section').classList.remove('hidden');
-            renderTeachersList();
-        } else {
-            roleBadge.textContent = "مدرس";
-            roleBadge.className = "badge badge-teacher";
-            document.getElementById('admin-only-section').classList.add('hidden');
-        }
+      status.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-warning me-1"></i> جاري طلب إذن الميكروفون...';
 
-        renderStudentsList();
-    }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        status.innerHTML = '<i class="fa-solid fa-circle-exclamation text-danger me-1"></i> المتصفح لا يدعم الميكروفون';
+        alert("المتصفح الحالي لا يدعم تسجيل الصوت بشكل مباشر.");
+        return;
+      }
 
-    function addNewTeacher() {
-        const name = document.getElementById('new-teacher-name').value.trim();
-        const user = document.getElementById('new-teacher-user').value.trim();
-        const pass = document.getElementById('new-teacher-pass').value.trim();
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+          try {
+            mediaRecorder = new MediaRecorder(stream);
+          } catch (err) {
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/mp4' });
+          }
 
-        if (!name || !user || !pass) {
-            alert('الرجاء ملء جميع حقول المدرس!');
-            return;
-        }
+          audioChunks = [];
+          recordingStartTime = Date.now();
 
-        const users = getUsers();
-        if (users[user]) {
-            alert('اسم المستخدم هذا موجود بالفعل!');
-            return;
-        }
-
-        users[user] = { password: pass, name: name, role: "teacher" };
-        localStorage.setItem('amal_users', JSON.stringify(users));
-
-        alert(`تمت إضافة المدرس (${name}) بنجاح!`);
-        document.getElementById('new-teacher-name').value = '';
-        document.getElementById('new-teacher-user').value = '';
-        document.getElementById('new-teacher-pass').value = '';
-        renderTeachersList();
-    }
-
-    function editTeacher(userKey) {
-        const users = getUsers();
-        const t = users[userKey];
-        const newName = prompt("تعديل اسم المدرس:", t.name);
-        const newPass = prompt("تعديل كلمة السر:", t.password);
-
-        if (newName !== null && newPass !== null && newName.trim() !== "" && newPass.trim() !== "") {
-            users[userKey].name = newName.trim();
-            users[userKey].password = newPass.trim();
-            localStorage.setItem('amal_users', JSON.stringify(users));
-            alert("تم تعديل بيانات المدرس بنجاح!");
-            renderTeachersList();
-        }
-    }
-
-    function deleteTeacher(userKey) {
-        if (confirm("هل أنت متأكد من حذف هذا المدرس؟")) {
-            const users = getUsers();
-            delete users[userKey];
-            localStorage.setItem('amal_users', JSON.stringify(users));
-            renderTeachersList();
-        }
-    }
-
-    function renderTeachersList() {
-        const list = document.getElementById('teachers-list');
-        const users = getUsers();
-        list.innerHTML = '';
-
-        let hasTeachers = false;
-        for (let u in users) {
-            if (users[u].role === 'teacher') {
-                hasTeachers = true;
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                item.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong>${users[u].name}</strong><br>
-                            <small style="color: #64748b;">اليوزر: ${u} | الرمز: ${users[u].password}</small>
-                        </div>
-                        <div>
-                            <button type="button" class="btn-sm btn-warning" onclick="editTeacher('${u}')">تعديل</button>
-                            <button type="button" class="btn-sm btn-danger" onclick="deleteTeacher('${u}')">حذف</button>
-                        </div>
-                    </div>
-                `;
-                list.appendChild(item);
+          mediaRecorder.ondataavailable = function(event) {
+            if (event.data && event.data.size > 0) {
+              audioChunks.push(event.data);
             }
-        }
+          };
 
-        if (!hasTeachers) {
-            list.innerHTML = '<p style="font-size:0.85rem; color:#78350f;">لا يوجد مدرسون مضافون بعد.</p>';
-        }
-    }
+          mediaRecorder.onstop = processAudioAndSave;
 
-    function addNewStudent() {
-        const name = document.getElementById('student-name').value.trim();
-        const grade = document.getElementById('student-grade').value.trim();
-        const phone = document.getElementById('student-phone').value.trim();
-        const feeTotal = parseFloat(document.getElementById('student-fee').value) || 0;
-
-        if (!name || !grade || !phone) {
-            alert('الرجاء ملء الحقول الأساسية للطالب (الاسم، الصف، الهاتف)!');
-            return;
-        }
-
-        const saved = localStorage.getItem('amal_students');
-        const students = saved ? JSON.parse(saved) : [];
-
-        students.push({
-            id: Date.now(),
-            name: name,
-            grade: grade,
-            phone: phone,
-            totalFee: feeTotal,
-            paidFee: 0,
-            addedByUsername: currentUsername,
-            addedByName: currentUser.name,
-            attendance: {}
+          mediaRecorder.start(500);
+          startBtn.disabled = true;
+          stopBtn.disabled = false;
+          status.innerHTML = '<i class="fa-solid fa-beat fa-microphone text-danger me-1"></i> 🔴 جاري تسجيل المحاضرة الآن...';
+        })
+        .catch(function(err) {
+          status.innerHTML = '<i class="fa-solid fa-circle-exclamation text-danger me-1"></i> تم رفض إذن الميكروفون';
+          alert("تنبيه: تم حظر الوصول للميكروفون من المتصفح!");
         });
+    };
 
-        localStorage.setItem('amal_students', JSON.stringify(students));
-        alert(`تمت إضافة الطالب (${name}) بنجاح!`);
-        
-        document.getElementById('student-name').value = '';
-        document.getElementById('student-grade').value = '';
-        document.getElementById('student-phone').value = '';
-        document.getElementById('student-fee').value = '';
-        renderStudentsList();
+    stopBtn.onclick = function(e) {
+      if (e) e.preventDefault();
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        if (mediaRecorder.stream) {
+          mediaRecorder.stream.getTracks().forEach(function(track) { track.stop(); });
+        }
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+      }
+    };
+
+    async function processAudioAndSave() {
+      const duration = (Date.now() - recordingStartTime) / 1000;
+
+      if (duration < 3 || audioChunks.length === 0) {
+        status.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-warning me-1"></i> التسجيل قصير جداً أو فارغ';
+        alert("التسجيل قصير جداً أو لم يحتوي على صوت!");
+        return;
+      }
+
+      status.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-primary me-1"></i> جاري استماع وتلخيص الصوت بكامل تفاصيله...';
+
+      const audioBlob = new Blob(audioChunks, { type: 'audio/mp4' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const title = document.getElementById('lectureTitle').value;
+      const apiKey = getEmbeddedKey();
+
+      try {
+        const summaryText = await summarizeAudioWithGemini(audioBlob, apiKey, title);
+        status.innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i> تم تحليل وتلخيص كافة نقاط التسجيل بنجاح!';
+        addLectureToUI(title, summaryText, audioUrl);
+      } catch (err) {
+        status.innerHTML = '<i class="fa-solid fa-circle-exclamation text-danger me-1"></i> خطأ في التلخيص';
+        alert("تعذر معالجة التسجيل بواسطة الذكاء الاصطناعي: " + err.message);
+      }
+
+      document.getElementById('lectureTitle').value = "";
     }
 
-    function updateFee(studentId) {
-        const addAmount = prompt("أدخل المبلغ المراد تسديده من القسط (د.ع):");
-        if (addAmount !== null && !isNaN(addAmount) && addAmount.trim() !== "") {
-            const amount = parseFloat(addAmount);
-            const saved = localStorage.getItem('amal_students');
-            let allStudents = saved ? JSON.parse(saved) : [];
-            const student = allStudents.find(s => s.id === studentId);
-            
-            if (student) {
-                student.paidFee = (student.paidFee || 0) + amount;
-                localStorage.setItem('amal_students', JSON.stringify(allStudents));
-                alert("تم تسديد المبلغ بنجاح!");
-                renderStudentsList();
+    async function summarizeAudioWithGemini(fileOrBlob, apiKey, title) {
+      const reader = new FileReader();
+      const base64Promise = new Promise((resolve) => {
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.readAsDataURL(fileOrBlob);
+      });
+
+      const base64Data = await base64Promise;
+      const mimeType = fileOrBlob.type || 'audio/mp4';
+
+      const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+      const promptText = `أنت أستاذ ومساعد دراسي ذكي ومحترف. استمع بعناية فائقة للملف الصوتي المرفق لمادة [${title}]، وقم بتقديم تلخيص شامل وكامل يدون كل التفاصيل والنقاط المهمة التي ذكرها المحاضر في التسجيل باللغة العربية:
+
+1. 📌 **المحاور والنقاط الرئيسية:** (استخرج كل موضوع أو فكرة تم شرحها بالترتيب).
+2. 📝 **التعاريف، المفاهيم والقوانين:** (اذكر كل تعريـف أو قانون أو قاعدة تم توضيحها بالكامل).
+3. ❓ **الأسئلة والتمارين المتوقعة:** (استخرج جميع الأسئلة أو المسائل التي ركز عليها الأستاذ أثناء المقطع).
+4. 💡 **ملاحظات وتنبهيات مهمة:** (أي ملاحظة قالها المحاضر بخصوص الامتحان أو الواجبات).
+
+يرجى عدم اختصار الشرح بشكل مخل، واستخراج كافة التفاصيل الصوتية بدقة لخدمة الطالب.`;
+
+      const requestBody = {
+        contents: [{
+          parts: [
+            { text: promptText },
+            {
+              inline_data: {
+                mime_type: mimeType,
+                data: base64Data
+              }
             }
-        }
+          ]
+        }]
+      };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error ? errorData.error.message : 'فشل الاتصال بالخادم');
+      }
+
+      const data = await response.json();
+      if (!data.candidates || !data.candidates[0].content) {
+        throw new Error('لم يتم التوصل لاستجابة من الذكاء الاصطناعي');
+      }
+
+      return data.candidates[0].content.parts[0].text;
     }
 
-    // زر تعديل بيانات الطالب الأساسية
-    function editStudent(studentId) {
-        const saved = localStorage.getItem('amal_students');
-        let allStudents = saved ? JSON.parse(saved) : [];
-        const s = allStudents.find(st => st.id === studentId);
+    function addLectureToUI(title, summary, audioSrc) {
+      const list = document.getElementById('lecturesList');
+      if (list.querySelector('p')) list.innerHTML = "";
 
-        if (s) {
-            const newName = prompt("تعديل اسم الطالب:", s.name);
-            const newGrade = prompt("تعديل الصف الدراسي:", s.grade);
-            const newPhone = prompt("تعديل رقم الهاتف:", s.phone);
-            const newFee = prompt("تعديل إجمالي القسط الكلي:", s.totalFee);
+      const cardId = 'card-' + Date.now();
+      const card = document.createElement('div');
+      card.className = 'lecture-card';
+      card.id = cardId;
 
-            if (newName !== null && newGrade !== null && newPhone !== null && newFee !== null) {
-                s.name = newName.trim();
-                s.grade = newGrade.trim();
-                s.phone = newPhone.trim();
-                s.totalFee = parseFloat(newFee) || 0;
+      const audioHTML = audioSrc ? `<audio controls src="${audioSrc}" class="mt-2"></audio>` : '';
 
-                localStorage.setItem('amal_students', JSON.stringify(allStudents));
-                alert("تم تعديل بيانات الطالب بنجاح!");
-                renderStudentsList();
-            }
-        }
+      card.innerHTML = `
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h5 class="fw-bold text-primary m-0 lecture-title-text"><i class="fa-solid fa-book-bookmark me-2"></i>${title}</h5>
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-info" onclick="copyLecture('${cardId}')" title="نسخ"><i class="fa-solid fa-copy"></i></button>
+            <button class="btn btn-sm btn-outline-success" onclick="downloadTXT('${cardId}')" title="تنزيل TXT"><i class="fa-solid fa-download"></i></button>
+            <button class="btn btn-sm btn-outline-warning" onclick="editLecture('${cardId}')" title="تعديل"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteLecture('${cardId}')" title="حذف"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+        <div class="text-light small lecture-summary-text" style="white-space: pre-line; line-height: 1.7;">${summary}</div>
+        ${audioHTML}
+      `;
+      list.prepend(card);
     }
 
-    function printReceipt(studentId) {
-        const saved = localStorage.getItem('amal_students');
-        const allStudents = saved ? JSON.parse(saved) : [];
-        const s = allStudents.find(st => st.id === studentId);
-
-        if (s) {
-            const receiptId = 'REC-' + s.id.toString().slice(-6);
-            const todayDate = new Date().toLocaleDateString('ar-IQ');
-            const total = s.totalFee || 0;
-            const paid = s.paidFee || 0;
-            const remaining = total - paid;
-
-            const printWindow = window.open('', '', 'width=600,height=600');
-            printWindow.document.write(`
-                <html dir="rtl" lang="ar">
-                <head>
-                    <title>وصل قبض - ${s.name}</title>
-                    <style>
-                        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; direction: rtl; text-align: right; }
-                        .receipt-box { border: 2px solid #333; padding: 20px; border-radius: 10px; }
-                        .header { text-align: center; border-bottom: 2px dashed #333; padding-bottom: 10px; margin-bottom: 15px; }
-                        .line { margin: 10px 0; font-size: 1.1rem; }
-                        .footer { margin-top: 40px; display: flex; justify-content: space-between; text-align: center; }
-                    </style>
-                </head>
-                <body>
-                    <div class="receipt-box">
-                        <div class="header">
-                            <h2>🌱 منصة أمل التعليمية</h2>
-                            <p>وصل قبض مالـي رسمي</p>
-                        </div>
-                        <div class="line"><strong>رقم الوصل:</strong> ${receiptId}</div>
-                        <div class="line"><strong>التاريخ:</strong> ${todayDate}</div>
-                        <div class="line"><strong>اسم الطالب:</strong> ${s.name}</div>
-                        <div class="line"><strong>الصف / المرحلة:</strong> ${s.grade}</div>
-                        <hr>
-                        <div class="line"><strong>المبلغ الكلي للقسط:</strong> ${formatMoney(total)} د.ع</div>
-                        <div class="line"><strong>المبلغ المدفوع حالياً:</strong> ${formatMoney(paid)} د.ع</div>
-                        <div class="line"><strong>المتبقي ذمته:</strong> ${formatMoney(remaining)} د.ع</div>
-                        <div class="footer">
-                            <div>توقيع الإدارة<br><br>...................</div>
-                            <div>توقيع المحاسب<br><br>...................</div>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-                printWindow.close();
-            }, 300);
-        }
-    }
-
-    function sendWhatsApp(phone, studentName, status, date, remainingFee) {
-        let cleanPhone = phone.replace(/\D/g, '');
-        if (cleanPhone.startsWith('0')) {
-            cleanPhone = '964' + cleanPhone.substring(1);
-        }
-
-        let message = `إدارة منصة أمل التعليمية\nولي الأمر المحترم، نود إعلامكم بأن ابنكم/تكم (${studentName}) سجل بحالة الحضور ليوم ${date} كـ: *${status}*.\nالمبلغ المتبقي من القسط: ${formatMoney(remainingFee)} د.ع.\nمع الشكر والتقدير.`;
+    function deleteLecture(cardId) {
+      if (confirm("هل أنت تأكد من إزالة هذه المحاضرة من الأرشيف؟")) {
+        const card = document.getElementById(cardId);
+        if (card) card.remove();
         
-        const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
+        const list = document.getElementById('lecturesList');
+        if (list.children.length === 0) {
+          list.innerHTML = '<p class="text-muted text-center py-3">لا توجد محاضرات محفوظة حتى الآن.</p>';
+        }
+      }
     }
 
-    function setStudentStatus(studentId, dateInputId, status) {
-        const dateVal = document.getElementById(dateInputId).value;
-        if (!dateVal) {
-            alert('الرجاء تحديد التاريخ أولاً!');
-            return;
-        }
+    function editLecture(cardId) {
+      const card = document.getElementById(cardId);
+      const titleElem = card.querySelector('.lecture-title-text');
+      const summaryElem = card.querySelector('.lecture-summary-text');
 
-        const saved = localStorage.getItem('amal_students');
-        const allStudents = saved ? JSON.parse(saved) : [];
-        const student = allStudents.find(s => s.id === studentId);
-        
-        if (student) {
-            if (!student.attendance) student.attendance = {};
-            student.attendance[dateVal] = status;
-            localStorage.setItem('amal_students', JSON.stringify(allStudents));
-            renderStudentsList();
-        }
+      const currentTitle = titleElem.innerText.replace(/^.*?  /, '');
+      const currentSummary = summaryElem.innerText;
+
+      const newTitle = prompt("تعديل عنوان المحاضرة:", currentTitle);
+      if (newTitle === null) return;
+
+      const newSummary = prompt("تعديل ملخص المحاضرة:", currentSummary);
+      if (newSummary === null) return;
+
+      titleElem.innerHTML = '<i class="fa-solid fa-book-bookmark me-2"></i>' + newTitle;
+      summaryElem.innerText = newSummary;
     }
 
-    function deleteStudent(studentId) {
-        if (confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
-            const saved = localStorage.getItem('amal_students');
-            let allStudents = saved ? JSON.parse(saved) : [];
-            allStudents = allStudents.filter(s => s.id !== studentId);
-            localStorage.setItem('amal_students', JSON.stringify(allStudents));
-            renderStudentsList();
-        }
+    function copyLecture(cardId) {
+      const card = document.getElementById(cardId);
+      const title = card.querySelector('.lecture-title-text').innerText;
+      const summary = card.querySelector('.lecture-summary-text').innerText;
+
+      const fullText = title + "\n\n" + summary + "\n\nتم التلخيص بواسطة: LecNote AI - مؤمل نزار";
+      navigator.clipboard.writeText(fullText).then(() => {
+        alert("تم نسخ التلخيص بنجاح إلى الحافظة!");
+      });
     }
 
-    function renderStudentsList() {
-        const list = document.getElementById('students-list');
-        let students = getStudents();
-        
-        // تطبيق البحث السريع
-        const searchQuery = document.getElementById('search-box').value.trim().toLowerCase();
-        if (searchQuery) {
-            students = students.filter(s => s.name.toLowerCase().includes(searchQuery) || s.phone.includes(searchQuery));
-        }
+    function downloadTXT(cardId) {
+      const card = document.getElementById(cardId);
+      const title = card.querySelector('.lecture-title-text').innerText;
+      const summary = card.querySelector('.lecture-summary-text').innerText;
 
-        list.innerHTML = '';
-
-        // حساب وإظهار إحصائيات المعهد المالية
-        let totalSum = 0;
-        let paidSum = 0;
-        getStudents().forEach(s => {
-            totalSum += (s.totalFee || 0);
-            paidSum += (s.paidFee || 0);
-        });
-        document.getElementById('stat-total').textContent = formatMoney(totalSum) + ' د.ع';
-        document.getElementById('stat-paid').textContent = formatMoney(paidSum) + ' د.ع';
-        document.getElementById('stat-remaining').textContent = formatMoney(totalSum - paidSum) + ' د.ع';
-
-        if (students.length === 0) {
-            list.innerHTML = '<p style="color: #94a3b8; text-align: center;">لا يوجد طلاب مسجلين حالياً.</p>';
-            return;
-        }
-
-        const today = getTodayDate();
-
-        students.forEach((s) => {
-            const activeDateInputId = `date-${s.id}`;
-            const item = document.createElement('div');
-            item.className = 'list-item';
-            
-            let selectedDate = today;
-            const existingInput = document.getElementById(activeDateInputId);
-            if (existingInput && existingInput.value) {
-                selectedDate = existingInput.value;
-            }
-
-            const total = s.totalFee || 0;
-            const paid = s.paidFee || 0;
-            const remaining = total - paid;
-
-            let currentStatus = (s.attendance && s.attendance[selectedDate]) ? s.attendance[selectedDate] : 'غير مسجل';
-
-            item.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px; margin-bottom: 8px;">
-                    <div>
-                        <strong style="font-size:1.1rem; color:#0f172a;">${s.name}</strong> - <span style="color: #2563eb;">${s.grade}</span><br>
-                        <small style="color: #64748b;">📱 الهاتف: ${s.phone} ${currentUser.role === 'admin' ? `| أُضيف بواسطة: ${s.addedByName}` : ''}</small>
-                    </div>
-                    <div style="text-align: left; font-size: 0.85rem; background: #f1f5f9; padding: 6px; border-radius: 6px;">
-                        <span>القسط الكلي: <strong>${formatMoney(total)}</strong> د.ع</span><br>
-                        <span>الواصل: <strong style="color: #16a34a;">${formatMoney(paid)}</strong> د.ع</span><br>
-                        <span>المتبقي: <strong style="color: #dc2626;">${formatMoney(remaining)}</strong> د.ع</span>
-                    </div>
-                </div>
-
-                <div class="item-actions">
-                    <label style="margin:0; font-size:0.8rem;">التاريخ:</label>
-                    <input type="date" id="${activeDateInputId}" value="${selectedDate}" style="width: auto; padding: 3px 6px; font-size: 0.8rem;">
-                    
-                    <button type="button" class="btn-sm btn-success" onclick="setStudentStatus(${s.id}, '${activeDateInputId}', 'حاضر')">حاضر</button>
-                    <button type="button" class="btn-sm btn-danger" onclick="setStudentStatus(${s.id}, '${activeDateInputId}', 'غائب')">غائب</button>
-                    
-                    <span style="font-size: 0.85rem; font-weight: bold;" id="status-view-${s.id}">
-                        ${getAttendanceLabel(s, selectedDate)}
-                    </span>
-                </div>
-
-                <div class="item-actions" style="margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 8px;">
-                    <button type="button" class="btn-sm btn-warning" onclick="updateFee(${s.id})">💰 تسديد قسط</button>
-                    <button type="button" class="btn-sm" style="background:#0284c7;" onclick="printReceipt(${s.id})">🖨️ طباعة وصل</button>
-                    <button type="button" class="btn-sm btn-whatsapp" onclick="sendWhatsApp('${s.phone}', '${s.name}', '${currentStatus}', '${selectedDate}', ${remaining})">💬 إرسال واتساب</button>
-                    <button type="button" class="btn-sm" style="background:#64748b;" onclick="editStudent(${s.id})">✏️ تعديل</button>
-                    <button type="button" class="btn-sm btn-danger" style="margin-right: auto;" onclick="deleteStudent(${s.id})">حذف</button>
-                </div>
-            `;
-            list.appendChild(item);
-
-            setTimeout(() => {
-                const dateInputElem = document.getElementById(activeDateInputId);
-                if (dateInputElem) {
-                    dateInputElem.addEventListener('change', function() {
-                        const viewElem = document.getElementById(`status-view-${s.id}`);
-                        if (viewElem) {
-                            viewElem.innerHTML = getAttendanceLabel(s, this.value);
-                        }
-                    });
-                }
-            }, 0);
-        });
+      const content = title + "\n" + "=".repeat(30) + "\n\n" + summary + "\n\n" + "=".repeat(30) + "\nفكرة وتنفيذ الطالب: مؤمل نزار | Telegram: @moamel_nazar";
+      
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = title.replace(/[^\w\s-]/gi, '') + '_ملخص.txt';
+      a.click();
     }
 
-    function getAttendanceLabel(student, targetDate) {
-        if (student.attendance && student.attendance[targetDate]) {
-            const st = student.attendance[targetDate];
-            if (st === 'حاضر') return `<span class="badge badge-present">حاضر (${targetDate})</span>`;
-            if (st === 'غائب') return `<span class="badge badge-absent">غائب (${targetDate})</span>`;
-        }
-        return '<span class="badge" style="background:#e2e8f0; color:#475569;">لم يُسجل</span>';
-    }
+    function filterLectures() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.getElementsByClassName('lecture-card');
 
-    function logout() {
-        currentUsername = null;
-        currentUser = null;
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('dashboard-section').classList.add('hidden');
-        document.getElementById('login-section').classList.remove('hidden');
+      for (let i = 0; i < cards.length; i++) {
+        const text = cards[i].innerText.toLowerCase();
+        cards[i].style.display = text.includes(input) ? 'block' : 'none';
+      }
     }
-</script>
-
+  </script>
 </body>
 </html>
